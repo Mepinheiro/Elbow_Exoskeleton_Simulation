@@ -195,12 +195,13 @@ As figuras e arquivos de resultados correspondentes podem ser encontrados no dir
 # Protótipo
 O projeto também contempla o desenvolvimento de um protótipo físico do exoesqueleto. O modelo CAD disponibilizado em PROTOTYPE_CAD/ permite visualizar a geometria do sistema desenvolvido.
 
-<img src="FIGURES_PROTOTYPE/EXO_V2.png" alt="Protótipo do exoesqueleto" width="200">
-
-<img src="FIGURES_PROTOTYPE/EXO_V3.png" alt="Protótipo do exoesqueleto" width="200">
-
-<img src="FIGURES_PROTOTYPE/EXO_V4_ANGULO.png" alt="Protótipo do exoesqueleto" width="200">
-
+<table>
+  <tr>
+    <td><img src="FIGURES_PROTOTYPE/EXO_V2.png" width="200" alt="Vista frontal"></td>
+    <td><img src="FIGURES_PROTOTYPE/EXO_V3.png" width="200" alt="Vista lateral"></td>
+    <td><img src="FIGURES_PROTOTYPE/EXO_V4_ANGULO.png" width="200" alt="Vista lateral"></td>
+  </tr>
+</table>
 
 # Reprodução das simulações
 
