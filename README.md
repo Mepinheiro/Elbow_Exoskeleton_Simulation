@@ -43,7 +43,7 @@ De forma geral:
 - K1: associado ao controle de sensibilidade e robustez do sistema;
 - K2: associado ao controle da impedância;
 - K3: associado ao rastreamento da trajetória.
-- 
+  
 Os controladores são disponibilizados nos arquivos:
 
 ```text
@@ -147,7 +147,7 @@ Nesse processo são obtidos os controladores K1, K2 e K3.
 
 # Execução
 - Requisitos
-- 
+ 
 Para executar os scripts, recomenda-se utilizar:
 - MATLAB;
 - ferramentas MATLAB necessárias para modelagem e controle;
@@ -166,7 +166,7 @@ As opções disponíveis são:
 - K1+K2
 - K1+K2+K3
 
-  A simulação é executada pela rotina main_elbow.m.
+A simulação é executada pela rotina main_elbow.m.
 
 # Referência de trajetória
 As simulações utilizam uma trajetória de referência variável no tempo para avaliar o desempenho de rastreamento do sistema.
