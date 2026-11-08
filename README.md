@@ -101,7 +101,7 @@ As principais comparações consideradas são:
 Esses arquivos correspondem a resultados de simulação numérica, não a dados experimentais.
 
 [PROTOTYPE_CAD/](PROTOTYPE_CAD/) -> Contém o modelo CAD do protótipo desenvolvido.
-- modelo_prototipo.step
+- exo_montagem.step
 
 O arquivo está no formato STEP e foi exportado a partir do modelo CAD desenvolvido no projeto através do software FUSION 360.
 
