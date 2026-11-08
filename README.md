@@ -194,9 +194,10 @@ As figuras e arquivos de resultados correspondentes podem ser encontrados no dir
 
 # Protótipo
 O projeto também contempla o desenvolvimento de um protótipo físico do exoesqueleto. O modelo CAD disponibilizado em PROTOTYPE_CAD/ permite visualizar a geometria do sistema desenvolvido.
-Fotos do protótipo podem ser encontradas em:
 
-[FIGURES_PROTOTYPE/](FIGURES_PROTOTYPE/)
+![Protótipo do exoesqueleto de cotovelo](FIGURES_PROTOTYPE/EXO_V2.jpg)
+![Protótipo do exoesqueleto de cotovelo](FIGURES_PROTOTYPE/EXO_V3.jpg)
+![Protótipo do exoesqueleto de cotovelo](FIGURES_PROTOTYPE/EXO_V4_ANGULO.jpg)
 
 # Reprodução das simulações
 
