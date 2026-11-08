@@ -51,7 +51,7 @@ controllers/
 ├── controladores.mat
 └── controladores_discretos.mat
 ```
-O arquivo [CONTROLLERS/](CONTROLLERS/). contém os controladores discretos utilizados nas simulações. 
+O arquivo [CONTROLLERS/](CONTROLLERS/) contém os controladores discretos utilizados nas simulações. 
 
 O procedimento original de discretização não está disponível neste repositório; portanto, essa etapa não é reproduzida aqui.
 
@@ -69,9 +69,7 @@ O procedimento original de discretização não está disponível neste reposit�
 │
 └── figures/
 ```
-(COLOCAR ARQUIVO - code/simulation/)
-
-Contém os scripts utilizados para configuração, execução e visualização das simulações.
+[CODE_SIMULATION/](CODE_SIMULATION/) -> contém os scripts utilizados para configuração, execução e visualização das simulações.
 
 | Arquivo | Descrição |
 |---|---|
@@ -82,21 +80,18 @@ Contém os scripts utilizados para configuração, execução e visualização d
 | `anim_elbow_init.m` | Inicialização da animação do movimento |
 | `anim_elbow_meio.m` | Atualização da animação durante a simulação |
 
-(COLOCAR ARQUIVO - code/control_design/)
-Contém os scripts relacionados à modelagem utilizada na síntese e ao projeto dos controladores H∞.
+[CODE_CONTROL_DESIGN/](CODE_CONTROL_DESIGN/) -> Contém os scripts relacionados à modelagem utilizada na síntese e ao projeto dos controladores H∞.
 
 | Arquivo | Descrição |
 |---|---|
 | `modelo_simulacao_G1_G2.m` | Construção dos modelos equivalentes utilizados na síntese |
 | `proj_hinf.m` | Projeto dos controladores H∞ K1, K2 e K3 |
 
-(COLOCAR ARQUIVO - controllers/)
-Contém os arquivos .mat com os controladores utilizados no projeto.
+[CONTROLLERS/](CONTROLLERS/) -> Contém os arquivos .mat com os controladores utilizados no projeto.
 - controladores.mat
 - controladores_discretos.mat
 
-(COLOCAR ARQUIVO - results/)
-Contém os resultados das simulações numéricas realizadas para comparação das estratégias de controle.
+[RESULTS/](RESULTS/) -> Contém os resultados das simulações numéricas realizadas para comparação das estratégias de controle.
 As principais comparações consideradas são:
 - PD × K1
 - PD × K1 com incertezas
@@ -105,14 +100,12 @@ As principais comparações consideradas são:
 
 Esses arquivos correspondem a resultados de simulação numérica, não a dados experimentais.
 
-(COLOCAR ARQUIVO - prototype/)
-Contém o modelo CAD do protótipo desenvolvido.
+[PROTOTYPE_CAD/](PROTOTYPE_CAD/) -> Contém o modelo CAD do protótipo desenvolvido.
 - modelo_prototipo.step
 
-O arquivo está no formato STEP e foi exportado a partir do modelo CAD desenvolvido no projeto.
+O arquivo está no formato STEP e foi exportado a partir do modelo CAD desenvolvido no projeto através do software FUSION 360.
 
-(COLOCAR ARQUIVO - figures/)
-Contém figuras utilizadas para documentação do projeto, incluindo registros do protótipo físico.
+[FIGURES_PROTOTYPE/](FIGURES_PROTOTYPE/) -> Contém figuras utilizadas para documentação do projeto, incluindo registros do protótipo físico.
 
 # Modelo matemático
 O modelo dinâmico utilizado nas simulações considera quatro estados:
@@ -146,8 +139,6 @@ A síntese dos controladores é realizada no arquivo:
 Nesse processo são obtidos os controladores K1, K2 e K3.
 
 # Execução
-- Requisitos
- 
 Para executar os scripts, recomenda-se utilizar:
 - MATLAB;
 - ferramentas MATLAB necessárias para modelagem e controle;
@@ -199,14 +190,13 @@ Avaliação da inclusão do controlador associado ao rastreamento da trajetória
 
 As figuras e arquivos de resultados correspondentes podem ser encontrados no diretório:
 
-(COLOCAR ARQUIVO - results/)
+[RESULTS/](RESULTS/)
 
 # Protótipo
-O projeto também contempla o desenvolvimento de um protótipo físico do exoesqueleto.
-O modelo CAD disponibilizado em prototype/ permite visualizar a geometria do sistema desenvolvido.
+O projeto também contempla o desenvolvimento de um protótipo físico do exoesqueleto. O modelo CAD disponibilizado em PROTOTYPE_CAD/ permite visualizar a geometria do sistema desenvolvido.
 Fotos do protótipo podem ser encontradas em:
 
-(COLOCAR ARQUIVO - results/)figures/prototype/
+[FIGURES_PROTOTYPE/](FIGURES_PROTOTYPE/)
 
 # Reprodução das simulações
 
