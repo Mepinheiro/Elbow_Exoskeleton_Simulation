@@ -51,7 +51,7 @@ controllers/
 ├── controladores.mat
 └── controladores_discretos.mat
 ```
-O arquivo [CONTROLLERS/controladores_discretos.mat] contém os controladores discretos utilizados nas simulações. 
+O arquivo [CONTROLLERS/](CONTROLLERS/). contém os controladores discretos utilizados nas simulações. 
 
 O procedimento original de discretização não está disponível neste repositório; portanto, essa etapa não é reproduzida aqui.
 
