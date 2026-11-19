@@ -1,23 +1,50 @@
 # Desenvolvimento, Controle e Simulação de um Exoesqueleto Robótico para Membros Superiores com Elo Elástico em Série e Controle H∞
 
-Repositório associado ao projeto de pesquisa “Desenvolvimento, Controle e Simulação de um Exoesqueleto Robótico para Membros Superiores com Elo Elástico em série e Controle H∞”, financiado pela Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), processo 2024/09583-3.
-O projeto aborda o desenvolvimento e a simulação de um exoesqueleto robótico de 1 grau de liberdade para reabilitação do movimento de flexão-extensão do cotovelo, considerando a utilização de um elo elástico em série e estratégias de controle baseadas em controle H∞.
-Este repositório disponibiliza os códigos MATLAB utilizados no projeto, os controladores desenvolvidos, dados necessários para as simulações, resultados obtidos numericamente e o modelo CAD do protótipo.
+Repositório associado ao projeto de pesquisa *"Desenvolvimento, Controle e Simulação de um Exoesqueleto Robótico para Membros Superiores com Elo Elástico em Série e Controle H∞"*, financiado pela Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), processo 2024/09583-3.
 
-# Objetivos
-Os principais objetivos do projeto são:
-- desenvolver um modelo dinâmico de um exoesqueleto para reabilitação do cotovelo;
+O projeto trata do desenvolvimento e da simulação de um exoesqueleto robótico de 1 grau de liberdade para reabilitação do movimento de flexão-extensão do cotovelo, com um elo elástico em série entre o atuador e o elo de saída e estratégias de controle baseadas em síntese H∞.
+
+Este repositório disponibiliza:
+
+- os códigos MATLAB de simulação e de projeto dos controladores;
+- os controladores H∞ obtidos (contínuos e discretos);
+- os resultados das simulações numéricas;
+- o modelo CAD e imagens do protótipo físico.
+
+---
+
+## Sumário
+
+1. [Objetivos](#objetivos)
+2. [Sistema desenvolvido](#sistema-desenvolvido)
+3. [Modelo matemático](#modelo-matemático)
+4. [Estratégias de controle](#estratégias-de-controle)
+5. [Estrutura do repositório](#estrutura-do-repositório)
+6. [Requisitos](#requisitos)
+7. [Como executar](#como-executar)
+8. [Resultados](#resultados)
+9. [Protótipo](#protótipo)
+10. [Limitações conhecidas](#limitações-conhecidas)
+11. [Como citar](#como-citar)
+12. [Financiamento](#financiamento)
+
+---
+
+## Objetivos
+
+- Desenvolver um modelo dinâmico de um exoesqueleto para reabilitação do cotovelo;
 - incorporar um elemento elástico em série entre o atuador e o elo de saída;
 - desenvolver estratégias de controle robusto baseadas em H∞;
-- avaliar o comportamento do sistema considerando diferentes estratégias de controle;
+- avaliar o comportamento do sistema sob diferentes estratégias de controle;
 - analisar o desempenho de rastreamento de trajetória, sensibilidade e impedância;
 - desenvolver e avaliar um protótipo físico do sistema.
 
-# Sistema desenvolvido
-O sistema considerado possui um grau de liberdade associado ao movimento de flexão-extensão do cotovelo.
-O modelo considera a dinâmica do atuador, o elo elástico e a interação com o membro superior. O atuador utilizado como referência no projeto é o CubeMars AK45-36, com redução de 36:1.
-O elemento elástico é representado por uma rigidez equivalente Ks, permitindo modelar a diferença entre a posição do motor e a posição do elo de saída.
-A estrutura básica do modelo pode ser representada como:
+## Sistema desenvolvido
+
+O sistema possui um grau de liberdade, associado ao movimento de flexão-extensão do cotovelo. O modelo considera a dinâmica do atuador, o elo elástico e a interação com o membro superior.
+
+- **Atuador de referência:** CubeMars AK45-36, com redução de 36:1.
+- **Elo elástico:** representado por uma rigidez equivalente $K_s$, que modela a diferença entre a posição do motor e a posição do elo de saída.
 
 ```text
 Referência
@@ -26,50 +53,102 @@ Referência
 Controlador
     │
     ▼
-Atuador ─── Elo Elástico ─── Membro superior
-    │                           │
-    └──────── realimentação ────┘
+Atuador ─── Elo elástico (Ks) ─── Membro superior
+    │                                  │
+    └─────────── realimentação ────────┘
 ```
-# Estratégias de controle
-Foram consideradas quatro configurações principais de controle:
-1. PD não robusto
-2. K1
-3. K1 + K2
-4. K1 + K2 + K3
 
-Os controladores K1, K2 e K3 foram obtidos por meio de síntese H∞.
-De forma geral:
+## Modelo matemático
 
-- K1: associado ao controle de sensibilidade e robustez do sistema;
-- K2: associado ao controle da impedância;
-- K3: associado ao rastreamento da trajetória.
-  
-Os controladores são disponibilizados nos arquivos:
+O modelo dinâmico utilizado nas simulações possui quatro estados:
+
+$$
+x =
+\begin{bmatrix}
+q_m & \dot{q}_m & q_l & \dot{q}_l
+\end{bmatrix}^{T}
+$$
+
+onde:
+
+- $q_m$ — posição angular do motor;
+- $\dot{q}_m$ — velocidade angular do motor;
+- $q_l$ — posição angular do elo de saída;
+- $\dot{q}_l$ — velocidade angular do elo de saída.
+
+A dinâmica considera a inércia do motor refletida pela transmissão, o amortecimento, a rigidez do elo elástico e o torque associado ao membro superior.
+
+### Modelo utilizado na síntese H∞
+
+O script `CODE_CONTROL_DESIGN/modelo_simulacao_G1_G2.m` constrói duas representações da dinâmica:
+
+- **G1:** dinâmica principal do atuador;
+- **G2:** efeito associado ao elo elástico em série.
+
+Esses modelos são combinados para formar a planta usada no projeto dos controladores, realizado em `CODE_CONTROL_DESIGN/proj_hinf.m`.
+
+## Estratégias de controle
+
+Foram avaliadas quatro configurações:
+
+| Configuração | Descrição |
+|---|---|
+| PD | Controlador PD convencional (não robusto), usado como referência |
+| K1 | Controle de sensibilidade e robustez |
+| K1 + K2 | Inclui K2, associado ao controle de impedância |
+| K1 + K2 + K3 | Inclui K3, associado ao rastreamento da trajetória |
+
+Os controladores K1, K2 e K3 foram obtidos por síntese H∞.
+
+**Trajetória de referência:** sinal chirp com offset angular, o que permite avaliar o controlador em diferentes frequências.
+
+**Métricas de desempenho:**
+
+- erro RMS de rastreamento;
+- erro máximo de rastreamento;
+- torque máximo do atuador.
+
+## Estrutura do repositório
 
 ```text
-controllers/
-├── controladores.mat
-└── controladores_discretos.mat
+Elbow_Exoskeleton_Simulation/
+│
+├── README.md
+│
+├── CODE_SIMULATION/
+│   ├── interface_elbow.m
+│   ├── main_elbow.m
+│   ├── elbow_model.m
+│   ├── modelParameters_elbow.m
+│   ├── anim_elbow_init.m
+│   └── anim_elbow_meio.m
+│
+├── CODE_CONTROL_DESIGN/
+│   ├── modelo_simulacao_G1_G2.m
+│   └── proj_hinf.m
+│
+├── CONTROLLERS/
+│   ├── controladores.mat
+│   └── controladores_discretos.mat
+│
+├── RESULTS/
+│   ├── PD_vs_K1/
+│   ├── PD_vs_K1_uncertainty/
+│   ├── K1_vs_K1K2/
+│   └── K1K2_vs_K1K2K3/
+│
+├── PROTOTYPE_CAD/
+│   └── exo_montagem.step
+│
+└── FIGURES_PROTOTYPE/
+    ├── EXO_V2.png
+    ├── EXO_V3.png
+    └── EXO_V4_ANGULO.png
 ```
-O arquivo [CONTROLLERS/](CONTROLLERS/) -> contém os controladores discretos utilizados nas simulações. 
 
-O procedimento original de discretização não está disponível neste repositório; portanto, essa etapa não é reproduzida aqui.
+### `CODE_SIMULATION/`
 
-# Estrutura do repositório
-```text
-├── code/
-│   ├── simulation/
-│   └── control_design/
-│
-├── controllers/
-│
-├── results/
-│
-├── prototype/
-│
-└── figures/
-```
-[CODE_SIMULATION/](CODE_SIMULATION/) -> contém os scripts utilizados para configuração, execução e visualização das simulações.
+Scripts de configuração, execução e visualização das simulações.
 
 | Arquivo | Descrição |
 |---|---|
@@ -80,183 +159,109 @@ O procedimento original de discretização não está disponível neste reposit�
 | `anim_elbow_init.m` | Inicialização da animação do movimento |
 | `anim_elbow_meio.m` | Atualização da animação durante a simulação |
 
-[CODE_CONTROL_DESIGN/](CODE_CONTROL_DESIGN/) -> Contém os scripts relacionados à modelagem utilizada na síntese e ao projeto dos controladores H∞.
+### `CODE_CONTROL_DESIGN/`
+
+Scripts de modelagem para a síntese e de projeto dos controladores H∞.
 
 | Arquivo | Descrição |
 |---|---|
-| `modelo_simulacao_G1_G2.m` | Construção dos modelos equivalentes utilizados na síntese |
+| `modelo_simulacao_G1_G2.m` | Construção dos modelos equivalentes G1 e G2 usados na síntese |
 | `proj_hinf.m` | Projeto dos controladores H∞ K1, K2 e K3 |
 
-[CONTROLLERS/](CONTROLLERS/) -> Contém os arquivos .mat com os controladores utilizados no projeto.
-- controladores.mat
-- controladores_discretos.mat
+### `CONTROLLERS/`
 
-[RESULTS/](RESULTS/) -> Contém os resultados das simulações numéricas realizadas para comparação das estratégias de controle.
-As principais comparações consideradas são:
-- PD × K1
-- PD × K1 com incertezas
-- K1 × K1+K2
-- K1+K2 × K1+K2+K3
+| Arquivo | Descrição |
+|---|---|
+| `controladores.mat` | Controladores H∞ contínuos, gerados por `proj_hinf.m` |
+| `controladores_discretos.mat` | Controladores discretos, usados nas simulações |
 
-Esses arquivos correspondem a resultados de simulação numérica, não a dados experimentais.
+### `RESULTS/`
 
-[PROTOTYPE_CAD/](PROTOTYPE_CAD/) -> Contém o modelo CAD do protótipo desenvolvido.
-- exo_montagem.step
+Resultados das simulações numéricas para cada comparação entre estratégias (ver [Resultados](#resultados)). **São resultados de simulação, não dados experimentais.**
 
-O arquivo está no formato STEP e foi exportado a partir do modelo CAD desenvolvido no projeto através do software FUSION 360.
+### `PROTOTYPE_CAD/`
 
-[FIGURES_PROTOTYPE/](FIGURES_PROTOTYPE/) -> Contém figuras utilizadas para documentação do projeto, incluindo registros do protótipo físico.
+`exo_montagem.step` — modelo CAD do protótipo em formato STEP, exportado do Fusion 360. Pode ser aberto em qualquer software CAD que leia STEP (Fusion 360, SolidWorks, FreeCAD etc.).
 
-# Modelo matemático
-O modelo dinâmico utilizado nas simulações considera quatro estados:
+### `FIGURES_PROTOTYPE/`
 
-$$
-x =
-\begin{bmatrix}
-q_m & \dot{q}_m & q_l & \dot{q}_l
-\end{bmatrix}^{T}
-$$
+Imagens de documentação do protótipo físico.
 
-onde:
-- $q_m$ — posição angular do motor;
-- $dq_m$ — velocidade angular do motor;
-- $q_l$ — posição angular do elo de saída;
-- $dq_l$ — velocidade angular do elo de saída.
+## Requisitos
 
-A dinâmica do sistema considera a inércia do motor refletida pela transmissão, o amortecimento, a rigidez do elo elástico e o torque associado ao membro superior. O modelo também considera a dinâmica equivalente utilizada no projeto dos controladores H∞.
+- MATLAB
+- Control System Toolbox (espaço de estados e funções de transferência)
+- Robust Control Toolbox (síntese H∞)
 
-# Modelo utilizado na síntese H∞
-O arquivo modelo_simulacao_G1_G2.m constrói duas representações da dinâmica:
+## Como executar
 
-- G1: dinâmica principal do atuador;
-- G2: efeito associado ao elo elástico em série.
+### Simulação
 
-Esses modelos são combinados para formar a representação da planta utilizada no projeto dos controladores.
+1. Clone ou baixe este repositório:
+   ```bash
+   git clone https://github.com/Mepinheiro/Elbow_Exoskeleton_Simulation.git
+   ```
+2. Abra o MATLAB e adicione a pasta do projeto, com subpastas, ao path:
+   ```matlab
+   addpath(genpath('Elbow_Exoskeleton_Simulation'))
+   ```
+3. Confira se os arquivos da pasta `CONTROLLERS/` estão disponíveis.
+4. Execute a interface gráfica:
+   ```matlab
+   interface_elbow
+   ```
+5. Configure os parâmetros do paciente e do robô, escolha o controlador (PD, K1, K1+K2 ou K1+K2+K3) e rode a simulação. A simulação é executada pela rotina `main_elbow.m`.
 
-A síntese dos controladores é realizada no arquivo:
-(COLOCAR ARQUIVO - code/control_design/proj_hinf.m)
+### Síntese dos controladores H∞
 
-Nesse processo são obtidos os controladores K1, K2 e K3.
+Para refazer a síntese dos controladores contínuos K1, K2 e K3:
 
-# Execução
-Para executar os scripts, recomenda-se utilizar:
-- MATLAB;
-- ferramentas MATLAB necessárias para modelagem e controle;
-- arquivos .mat disponibilizados neste repositório.
+```matlab
+proj_hinf
+```
 
-Os scripts utilizam funções relacionadas à modelagem em espaço de estados, funções de transferência e síntese de controle H∞.
-  
-# Simulação
-Para executar uma simulação utilizando a interface gráfica:
-- interface_elbow
-  
-A interface permite configurar parâmetros do paciente, parâmetros do robô e selecionar a estratégia de controle.
-As opções disponíveis são:
-- PD (Non-robust)
-- K1
-- K1+K2
-- K1+K2+K3
+## Resultados
 
-A simulação é executada pela rotina main_elbow.m.
+| Pasta | Comparação |
+|---|---|
+| `RESULTS/PD_vs_K1/` | Controlador PD convencional × controlador robusto K1 |
+| `RESULTS/PD_vs_K1_uncertainty/` | PD × K1 considerando incertezas nos parâmetros do sistema |
+| `RESULTS/K1_vs_K1K2/` | Efeito da inclusão do controlador de impedância K2 |
+| `RESULTS/K1K2_vs_K1K2K3/` | Efeito da inclusão do controlador de rastreamento K3 |
 
-# Referência de trajetória
-As simulações utilizam uma trajetória de referência variável no tempo para avaliar o desempenho de rastreamento do sistema.
-A referência é construída a partir de um sinal chirp com offset angular, permitindo avaliar o comportamento do controlador em diferentes frequências.
+## Protótipo
 
-# Métricas de desempenho
-  Durante as simulações são calculadas métricas para avaliação do desempenho do sistema, incluindo:
-  - erro RMS de rastreamento;
-  - erro máximo de rastreamento;
-  - torque máximo do atuador.
-Essas métricas permitem comparar quantitativamente as diferentes estratégias de controle.
-
-# Resultados
-  
-Os resultados disponibilizados neste repositório correspondem às simulações realizadas durante o desenvolvimento do projeto.
-
-As principais análises incluem:
-
-- PD × K1
-Comparação entre o controlador PD convencional e o controlador robusto K1.
-
-- PD × K1 com incertezas
-Avaliação do comportamento dos controladores considerando incertezas nos parâmetros do sistema.
-
-- K1 × K1+K2
-Avaliação da inclusão do controlador associado ao controle de impedância.
-
-- K1+K2 × K1+K2+K3
-Avaliação da inclusão do controlador associado ao rastreamento da trajetória.
-
-As figuras e arquivos de resultados correspondentes podem ser encontrados no diretório:
-
-[RESULTS/](RESULTS/)
-
-# Protótipo
-O projeto também contempla o desenvolvimento de um protótipo físico do exoesqueleto. O modelo CAD disponibilizado em PROTOTYPE_CAD/ permite visualizar a geometria do sistema desenvolvido.
+O projeto inclui o desenvolvimento de um protótipo físico do exoesqueleto. O modelo CAD está em [`PROTOTYPE_CAD/`](PROTOTYPE_CAD/).
 
 <table>
   <tr>
-    <td><img src="FIGURES_PROTOTYPE/EXO_V2.png" width="200" alt="Vista frontal"></td>
-    <td><img src="FIGURES_PROTOTYPE/EXO_V3.png" width="200" alt="Vista lateral"></td>
-    <td><img src="FIGURES_PROTOTYPE/EXO_V4_ANGULO.png" width="200" alt="Vista lateral"></td>
+    <td align="center"><img src="FIGURES_PROTOTYPE/EXO_V2.png" width="220" alt="Vista frontal do protótipo"><br><sub>Vista frontal</sub></td>
+    <td align="center"><img src="FIGURES_PROTOTYPE/EXO_V3.png" width="220" alt="Vista lateral do protótipo"><br><sub>Vista lateral</sub></td>
+    <td align="center"><img src="FIGURES_PROTOTYPE/EXO_V4_ANGULO.png" width="220" alt="Vista em ângulo do protótipo"><br><sub>Vista em ângulo</sub></td>
   </tr>
 </table>
 
-# Reprodução das simulações
+## Limitações conhecidas
 
-Para reproduzir as simulações principais:
-1. Clone ou faça o download deste repositório.
-2. Abra o MATLAB.
-3. Adicione o diretório do projeto ao MATLAB path.
-4. Certifique-se de que os arquivos da pasta controllers/ estejam disponíveis.
-5. Execute:
-interface_elbow
-6. Selecione os parâmetros desejados.
-7. Selecione o controlador.
-8. Execute a simulação.
+- **Discretização:** o procedimento original de discretização dos controladores não está neste repositório. Os controladores discretos usados nas simulações estão em `CONTROLLERS/controladores_discretos.mat`, mas essa etapa não pode ser reproduzida a partir dos scripts.
+- **Resultados:** todos os resultados disponibilizados são de simulação numérica.
 
-Para realizar novamente a síntese dos controladores H∞, utilize:
-proj_hinf
+## Como citar
 
-O procedimento de síntese gera os controladores contínuos utilizados no projeto.
+Se este repositório for útil para o seu trabalho, cite:
 
- # Organização dos arquivos
- ```text
-elbow-exoskeleton-hinf/
-│
-├── README.md
-├── LICENSE
-├── .gitignore
-│
-├── code/
-│   ├── simulation/
-│   │   ├── interface_elbow.m
-│   │   ├── main_elbow.m
-│   │   ├── elbow_model.m
-│   │   ├── modelParameters_elbow.m
-│   │   ├── anim_elbow_init.m
-│   │   └── anim_elbow_meio.m
-│   │
-│   └── control_design/
-│       ├── modelo_simulacao_G1_G2.m
-│       └── proj_hinf.m
-│
-├── controllers/
-│   ├── controladores.mat
-│   └── controladores_discretos.mat
-│
-├── results/
-│   ├── PD_vs_K1/
-│   ├── PD_vs_K1_uncertainty/
-│   ├── K1_vs_K1K2/
-│   └── K1K2_vs_K1K2K3/
-│
-├── prototype/
-│   └── modelo_prototipo.step
-│
-└── figures/
-    └── prototype/
- ```
- # Financiamento
- Este trabalho foi desenvolvido com apoio da Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), por meio do processo: FAPESP 2024/09583-3
+> PINHEIRO, Maria Eduarda Almeida. *Desenvolvimento, Controle e Simulação de um Exoesqueleto Robótico para Membros Superiores com Elo Elástico em Série e Controle H∞*. Dissertação (Mestrado em Engenharia Elétrica) — Universidade Estadual Paulista (Unesp), 2026.
+
+```bibtex
+@mastersthesis{pinheiro2026exoesqueleto,
+  author = {Pinheiro, Maria Eduarda Almeida},
+  title  = {Desenvolvimento, Controle e Simula{\c{c}}{\~a}o de um Exoesqueleto Rob{\'o}tico para Membros Superiores com Elo El{\'a}stico em S{\'e}rie e Controle {H$_\infty$}},
+  school = {Universidade Estadual Paulista (Unesp)},
+  year   = {2026},
+  type   = {Disserta{\c{c}}{\~a}o de Mestrado}
+}
+```
+
+## Financiamento
+
+Este trabalho foi desenvolvido com apoio da Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP), processo 2024/09583-3.
